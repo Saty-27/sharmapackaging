@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 import { useAuth } from '../../context/AuthContext';
+import { getMediaUrl } from '../../utils/api';
 import { 
   FaSearch, FaPaperclip, FaPaperPlane, FaUser, FaBuilding, FaEnvelope, 
   FaPhone, FaGlobe, FaCheckCircle, FaExclamationCircle, 
@@ -9,8 +10,13 @@ import {
 } from 'react-icons/fa';
 import './AdminChatbot.css';
 
-const API_BASE = 'http://localhost:5001/api';
-const SOCKET_URL = 'http://localhost:5001';
+const trimTrailingSlash = (value) => (value || '').replace(/\/+$/, '');
+const configuredApiBase = import.meta.env.VITE_API_URL?.trim();
+const defaultApiBase = import.meta.env.DEV ? 'http://localhost:5002' : '';
+const BASE_HOST = trimTrailingSlash(configuredApiBase || defaultApiBase);
+
+const API_BASE = `${BASE_HOST}/api`;
+const SOCKET_URL = BASE_HOST || (typeof window !== 'undefined' ? window.location.origin : '');
 
 export default function AdminChatbot() {
   const { token, user: adminUser } = useAuth();
@@ -207,6 +213,7 @@ export default function AdminChatbot() {
     const textToSend = inputMessage.trim();
     setInputMessage('');
 
+    const idempotencyId = 'msg-admin-' + Date.now();
     const messageData = {
       conversationId: selectedConvId,
       message: textToSend,
@@ -215,11 +222,33 @@ export default function AdminChatbot() {
       attachmentName: attachmentObj ? attachmentObj.originalName : '',
       attachmentSize: attachmentObj ? attachmentObj.size : 0,
       attachmentMime: attachmentObj ? attachmentObj.mimeType : '',
-      idempotencyId: 'msg-admin-' + Date.now()
+      idempotencyId
     };
+
+    // Optimistic UI update in Admin thread
+    const localMsg = {
+      _id: idempotencyId,
+      conversationId: selectedConvId,
+      senderId: adminUser?.id || adminUser?._id || 'admin',
+      senderType: 'admin',
+      messageType: messageData.messageType,
+      message: messageData.message,
+      attachmentUrl: messageData.attachmentUrl,
+      attachmentName: messageData.attachmentName,
+      attachmentSize: messageData.attachmentSize,
+      attachmentMime: messageData.attachmentMime,
+      createdAt: new Date().toISOString()
+    };
+    setMessages((prev) => [...prev, localMsg]);
 
     if (socketRef.current) {
       socketRef.current.emit('message:send', messageData);
+    }
+
+    try {
+      await adminApi.post('/chat/admin/messages', messageData);
+    } catch (err) {
+      console.warn('API backup admin message send error:', err.message);
     }
   };
 
@@ -252,7 +281,7 @@ export default function AdminChatbot() {
 
   const renderFileAttachment = (msg) => {
     const { messageType, attachmentUrl, attachmentName, attachmentSize } = msg;
-    const fullUrl = attachmentUrl.startsWith('http') ? attachmentUrl : `http://localhost:5001${attachmentUrl}`;
+    const fullUrl = getMediaUrl(attachmentUrl);
     const sizeMb = attachmentSize ? (attachmentSize / (1024 * 1024)).toFixed(2) + ' MB' : '';
 
     if (messageType === 'image') {

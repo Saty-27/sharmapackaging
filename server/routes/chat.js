@@ -143,6 +143,147 @@ router.get('/conversation', protectCustomer, async (req, res) => {
   }
 });
 
+// POST /api/chat/messages - Customer send message via HTTP API
+router.post('/messages', protectCustomer, async (req, res) => {
+  try {
+    const { conversationId, message, attachmentUrl, attachmentName, attachmentSize, attachmentMime, messageType, idempotencyId } = req.body;
+    const customerId = req.customer._id || req.customer.id;
+
+    if (mongoose.connection.readyState === 1) {
+      try {
+        let conversation = await Conversation.findById(conversationId);
+        if (!conversation) {
+          conversation = await Conversation.findOne({ customerId, status: { $ne: 'closed' } });
+        }
+        if (!conversation) {
+          conversation = await Conversation.create({
+            customerId,
+            status: 'open',
+            supportMode: 'human',
+            lastMessageAt: new Date()
+          });
+        }
+
+        if (idempotencyId) {
+          const existing = await ChatMessage.findOne({ idempotencyId });
+          if (existing) return res.json(existing);
+        }
+
+        const msgRecord = await ChatMessage.create({
+          conversationId: conversation._id,
+          senderId: customerId,
+          senderType: 'customer',
+          messageType: messageType || 'text',
+          message: message || '',
+          attachmentUrl: attachmentUrl || '',
+          attachmentName: attachmentName || '',
+          attachmentSize: attachmentSize || 0,
+          attachmentMime: attachmentMime || '',
+          idempotencyId: idempotencyId || ''
+        });
+
+        await Conversation.findByIdAndUpdate(conversation._id, {
+          lastMessageAt: new Date(),
+          $inc: { unreadCountAdmin: 1 }
+        });
+
+        return res.status(201).json(msgRecord);
+      } catch (dbErr) {
+        console.warn('DB HTTP message send error:', dbErr.message);
+      }
+    }
+
+    // In-memory fallback
+    const msgRecord = {
+      _id: 'msg-' + Date.now(),
+      conversationId,
+      senderId: customerId,
+      senderType: 'customer',
+      messageType: messageType || 'text',
+      message: message || '',
+      attachmentUrl: attachmentUrl || '',
+      attachmentName: attachmentName || '',
+      attachmentSize: attachmentSize || 0,
+      attachmentMime: attachmentMime || '',
+      createdAt: new Date()
+    };
+
+    const msgs = inMemoryMessages.get(conversationId) || [];
+    msgs.push(msgRecord);
+    inMemoryMessages.set(conversationId, msgs);
+
+    res.status(201).json(msgRecord);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to send message', error: error.message });
+  }
+});
+
+// POST /api/chat/admin/messages - Admin reply via HTTP API
+router.post('/admin/messages', protectAdmin, async (req, res) => {
+  try {
+    const { conversationId, message, attachmentUrl, attachmentName, attachmentSize, attachmentMime, messageType, idempotencyId } = req.body;
+    const adminId = req.user.id || req.user._id || 'admin';
+
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const conversation = await Conversation.findById(conversationId);
+        if (!conversation) {
+          return res.status(404).json({ message: 'Conversation not found' });
+        }
+
+        if (idempotencyId) {
+          const existing = await ChatMessage.findOne({ idempotencyId });
+          if (existing) return res.json(existing);
+        }
+
+        const msgRecord = await ChatMessage.create({
+          conversationId,
+          senderId: adminId,
+          senderType: 'admin',
+          messageType: messageType || 'text',
+          message: message || '',
+          attachmentUrl: attachmentUrl || '',
+          attachmentName: attachmentName || '',
+          attachmentSize: attachmentSize || 0,
+          attachmentMime: attachmentMime || '',
+          idempotencyId: idempotencyId || ''
+        });
+
+        await Conversation.findByIdAndUpdate(conversationId, {
+          lastMessageAt: new Date(),
+          $inc: { unreadCountCustomer: 1 }
+        });
+
+        return res.status(201).json(msgRecord);
+      } catch (dbErr) {
+        console.warn('DB Admin message send error:', dbErr.message);
+      }
+    }
+
+    const msgRecord = {
+      _id: 'msg-' + Date.now(),
+      conversationId,
+      senderId: adminId,
+      senderType: 'admin',
+      messageType: messageType || 'text',
+      message: message || '',
+      attachmentUrl: attachmentUrl || '',
+      attachmentName: attachmentName || '',
+      attachmentSize: attachmentSize || 0,
+      attachmentMime: attachmentMime || '',
+      createdAt: new Date()
+    };
+
+    const msgs = inMemoryMessages.get(conversationId) || [];
+    msgs.push(msgRecord);
+    inMemoryMessages.set(conversationId, msgs);
+
+    res.status(201).json(msgRecord);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to send admin message', error: error.message });
+  }
+});
+
 // POST /api/chat/upload - Customer & Admin File Upload (1MB max, MIME check)
 router.post('/upload', (req, res) => {
   upload.single('file')(req, res, (err) => {
