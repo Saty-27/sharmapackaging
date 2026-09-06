@@ -187,8 +187,17 @@ export const ChatProvider = ({ children }) => {
 
   // Send message
   const sendMessage = async (text, attachment = null) => {
-    if (!conversation) return;
-    const convId = conversation._id || conversation.id;
+    let currentConv = conversation;
+    if (!currentConv) {
+      currentConv = await loadConversation();
+    }
+
+    const convId = currentConv?._id || currentConv?.id || ('conv-temp-' + Date.now());
+    if (!currentConv) {
+      const fallbackConv = { _id: convId, id: convId };
+      setConversation(fallbackConv);
+    }
+
     const idempotencyId = 'msg-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7);
 
     const messageData = {
@@ -202,16 +211,40 @@ export const ChatProvider = ({ children }) => {
       idempotencyId
     };
 
+    // Optimistic UI update so user immediately sees sent message
+    const localMsg = {
+      _id: idempotencyId,
+      conversationId: convId,
+      senderId: customerUser?._id || customerUser?.id || 'me',
+      senderType: 'customer',
+      messageType: messageData.messageType,
+      message: messageData.message,
+      attachmentUrl: messageData.attachmentUrl,
+      attachmentName: messageData.attachmentName,
+      attachmentSize: messageData.attachmentSize,
+      attachmentMime: messageData.attachmentMime,
+      createdAt: new Date().toISOString()
+    };
+
+    setMessages((prev) => {
+      if (prev.some((m) => m._id === idempotencyId || (m.idempotencyId && m.idempotencyId === idempotencyId))) {
+        return prev;
+      }
+      return [...prev, localMsg];
+    });
+
     if (socketRef.current && isConnected) {
       socketRef.current.emit('message:send', messageData);
-    } else {
-      // API Backup send
-      try {
-        const res = await customerApi.post('/chat/messages', messageData);
-        setMessages((prev) => [...prev, res.data]);
-      } catch (err) {
-        console.error('Error sending message:', err);
+    }
+
+    // Always attempt HTTP backup send to guarantee receipt
+    try {
+      const res = await customerApi.post('/chat/messages', messageData);
+      if (res.data) {
+        setMessages((prev) => prev.map((m) => (m._id === idempotencyId ? res.data : m)));
       }
+    } catch (err) {
+      console.warn('API backup send error:', err.message);
     }
   };
 
