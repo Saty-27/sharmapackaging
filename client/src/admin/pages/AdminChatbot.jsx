@@ -42,6 +42,7 @@ export default function AdminChatbot() {
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
   const selectedConvIdRef = useRef(selectedConvId);
+  const threadRef = useRef(null);
 
   useEffect(() => {
     selectedConvIdRef.current = selectedConvId;
@@ -189,7 +190,12 @@ export default function AdminChatbot() {
   };
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (threadRef.current) {
+      threadRef.current.scrollTo({
+        top: threadRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   }, [messages, customerIsTyping]);
 
   // File select handler (1MB cap)
@@ -475,7 +481,7 @@ export default function AdminChatbot() {
               </div>
 
               {/* Chat Thread */}
-              <div className="admin-chat-thread">
+              <div className="admin-chat-thread" ref={threadRef}>
                 {messages.map((m, idx) => {
                   const isAdminMsg = m.senderType === 'admin';
                   const isSystem = m.senderType === 'system';
