@@ -128,32 +128,42 @@ export default function AdminChatbot() {
     });
 
     socket.on('message:new', (msg) => {
-      const activeId = selectedConvIdRef.current;
-      const msgConvId = msg.conversationId || (msg.conversation?._id || msg.conversation);
-      if (msgConvId === activeId) {
+      const activeId = String(selectedConvIdRef.current || '');
+      const msgConvId = String(msg?.conversationId?._id || msg?.conversationId || msg?.conversation || '');
+      if (activeId && msgConvId && msgConvId === activeId) {
         setMessages((prev) => {
-          if (prev.some((m) => m._id === msg._id || (msg.idempotencyId && m.idempotencyId === msg.idempotencyId))) {
+          if (prev.some((m) => String(m._id) === String(msg._id) || (msg.idempotencyId && m.idempotencyId === msg.idempotencyId))) {
             return prev;
           }
           return [...prev, msg];
         });
+        fetchActiveConversationDetail(activeId);
       }
       fetchConversations();
     });
 
     socket.on('conversation:updated', ({ conversation, lastMessage }) => {
       fetchConversations();
-      const activeId = selectedConvIdRef.current;
-      if (lastMessage) {
-        const lastMsgConvId = lastMessage.conversationId || (lastMessage.conversation?._id || lastMessage.conversation);
-        if (lastMsgConvId === activeId) {
+      const activeId = String(selectedConvIdRef.current || '');
+      const targetConvId = String(
+        conversation?._id || 
+        conversation?.id || 
+        lastMessage?.conversationId?._id || 
+        lastMessage?.conversationId || 
+        lastMessage?.conversation || 
+        ''
+      );
+
+      if (activeId && targetConvId && targetConvId === activeId) {
+        if (lastMessage) {
           setMessages((prev) => {
-            if (prev.some((m) => m._id === lastMessage._id || (lastMessage.idempotencyId && m.idempotencyId === lastMessage.idempotencyId))) {
+            if (prev.some((m) => String(m._id) === String(lastMessage._id) || (lastMessage.idempotencyId && m.idempotencyId === lastMessage.idempotencyId))) {
               return prev;
             }
             return [...prev, lastMessage];
           });
         }
+        fetchActiveConversationDetail(activeId);
       }
     });
 
