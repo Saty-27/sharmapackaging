@@ -106,7 +106,20 @@ export const ChatProvider = ({ children }) => {
       const res = await customerApi.get('/chat/conversation');
       const { conversation: conv, messages: msgs } = res.data;
       setConversation(conv);
-      setMessages(msgs || []);
+      if (msgs && Array.isArray(msgs)) {
+        setMessages((prev) => {
+          const map = new Map();
+          prev.forEach((m) => {
+            const key = m._id || m.idempotencyId;
+            if (key) map.set(key, m);
+          });
+          msgs.forEach((m) => {
+            const key = m._id || m.idempotencyId;
+            if (key) map.set(key, m);
+          });
+          return Array.from(map.values()).sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
+        });
+      }
       return conv;
     } catch (err) {
       console.warn('Error loading customer conversation:', err);

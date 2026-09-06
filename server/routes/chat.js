@@ -94,7 +94,13 @@ router.get('/conversation', protectCustomer, async (req, res) => {
           });
         }
 
-        const messages = await ChatMessage.find({ conversationId: conversation._id }).sort({ createdAt: 1 });
+        const convIdStr = conversation._id.toString();
+        const messages = await ChatMessage.find({
+          $or: [
+            { conversationId: conversation._id },
+            { conversationId: convIdStr }
+          ]
+        }).sort({ createdAt: 1 });
         return res.json({ conversation, messages });
       } catch (dbErr) {
         console.warn('DB conversation fetch warning:', dbErr.message);
@@ -414,7 +420,12 @@ router.get('/admin/conversations/:id', protectAdmin, async (req, res) => {
           return res.status(404).json({ message: 'Conversation not found' });
         }
 
-        const messages = await ChatMessage.find({ conversationId: convId }).sort({ createdAt: 1 });
+        const messages = await ChatMessage.find({
+          $or: [
+            { conversationId: convId },
+            { conversationId: convId.toString() }
+          ]
+        }).sort({ createdAt: 1 });
 
         // Mark admin unread count as 0
         conversation.unreadCountAdmin = 0;
