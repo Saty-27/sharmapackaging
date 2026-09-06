@@ -96,7 +96,12 @@ export default function Products() {
             {filteredProducts.map((prod) => (
               <div key={prod.id} className="product-card">
                 <div className="card-img-wrapper">
-                  <img src={prod.image} alt={prod.name} className="product-img" />
+                  <img 
+                    src={prod.image} 
+                    onError={(e) => { e.target.onerror = null; e.target.src = '/Wooden-Pallets.png'; }}
+                    alt={prod.name} 
+                    className="product-img" 
+                  />
                   <span className="category-badge">{prod.category}</span>
                 </div>
 
