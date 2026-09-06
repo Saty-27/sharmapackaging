@@ -86,7 +86,19 @@ export default function AdminChatbot() {
     try {
       const res = await adminApi.get(`/chat/admin/conversations/${convId}`);
       setActiveConv(res.data.conversation);
-      setMessages(res.data.messages || []);
+      const dbMsgs = res.data.messages || [];
+      setMessages((prev) => {
+        const map = new Map();
+        prev.forEach((m) => {
+          const key = String(m._id || m.idempotencyId || '');
+          if (key) map.set(key, m);
+        });
+        dbMsgs.forEach((m) => {
+          const key = String(m._id || m.idempotencyId || '');
+          if (key) map.set(key, m);
+        });
+        return Array.from(map.values()).sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
+      });
     } catch (err) {
       console.warn('Error fetching active conversation detail:', err);
     }
@@ -137,7 +149,6 @@ export default function AdminChatbot() {
           }
           return [...prev, msg];
         });
-        fetchActiveConversationDetail(activeId);
       }
       fetchConversations();
     });
@@ -163,7 +174,6 @@ export default function AdminChatbot() {
             return [...prev, lastMessage];
           });
         }
-        fetchActiveConversationDetail(activeId);
       }
     });
 
