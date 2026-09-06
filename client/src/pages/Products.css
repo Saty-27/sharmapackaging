@@ -1,0 +1,28 @@
+.products-hero {
+  padding: 80px 0 64px;
+}
+
+.products-hero h1 {
+  margin-top: 10px;
+  margin-bottom: 16px;
+}
+
+.hero-p {
+  max-width: 680px;
+  margin: 0 auto;
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.custom-strip {
+  padding: 64px 0;
+}
+
+.custom-strip h2 {
+  margin-bottom: 12px;
+}
+
+.custom-strip p {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 28px;
+}

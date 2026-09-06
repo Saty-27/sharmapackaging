@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sharma Packaging - Complete range of premium packaging products including wooden pallets, shrink wrapping, and custom packaging solutions.">
+    <meta name="keywords" content="Sharma Packaging, packaging products, wooden pallets, shrink wrapping, custom packaging, industrial packaging, shipping materials">
+    <title>Our Products - Sharma Packaging</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/jpeg" href="favicon.jpeg">
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <img src="assets/logo.png" alt="Sharma Packaging Logo" class="logo-img">
+                </a>
+            </div>
+            
+             <div class="nav-menu" id="nav-menu">
+                <a href="index.html#home" class="nav-link">Home</a>
+                <a href="index.html#about" class="nav-link">About Us</a>
+                <a href="index.html#products" class="nav-link active">Products</a>
+               
+                
+                <a href="index.html#contact" class="nav-link">Contact</a>
+            </div>
+
+            
+            
+            <div class="nav-actions">
+                <a href="#" class="brochure-btn" title="Download Brochure">
+                    <i class="fas fa-download"></i>
+                    <span class="brochure-text">Brochure</span>
+                </a>
+                
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Products Section -->
+    <section class="products">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Our Products</span>
+                <h2 class="section-title">Complete Range of Packaging Solutions</h2>
+            </div>
+            
+            <div class="product-filters">
+                <button class="filter-btn active" data-filter="all">All Products</button>
+                <button class="filter-btn" data-filter="pallets">Wooden Pallets</button>
+                <button class="filter-btn" data-filter="packing">Packing Materials</button>
+                <button class="filter-btn" data-filter="wrapping">Shrink Wrapping</button>
+                <button class="filter-btn" data-filter="materials">View More</button>
+            </div>
+            
+
+
+            <div class="products-grid">
+                <div class="product-item" data-category="pallets">
+                    <div class="product-image">
+                        <img src="assets/products/Wooden-Pallets.jpg" alt="Wooden Pallets" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="view-btn"><i class="fas fa-eye"></i></button>
+                            <button class="cart-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h3>Wooden Pallets</h3>
+                        <p>Durable wooden pallets crafted for heavy-duty industrial use with customizable dimensions.</p>
+                        <ul class="product-features">
+                            <li>Heat-treated & ISPM 15 certified</li>
+                            <li>Load capacity up to 2000 kg</li>
+                            <li>Eco-friendly & reusable</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <button class="product-btn btn-quote">Get Quote</button>
+                            <a href="product-wooden-pallets.html" class="product-btn btn-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product: Wooden Skid -->
+                <div class="product-item" data-category="skids">
+                    <div class="product-image">
+                        <img src="assets/products/woodenskids.webp" 
+                             alt="Wooden Skid" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="view-btn"><i class="fas fa-eye"></i></button>
+                            <button class="cart-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h3>Wooden Skid</h3>
+                        <p>Heavy-duty wooden skids designed for safe and efficient handling of industrial goods.</p>
+                        <ul class="product-features">
+                            <li>Strong and durable construction</li>
+                            <li>Ideal for heavy load support</li>
+                            <li>Reusable and eco-friendly</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <button class="product-btn btn-quote">Get Quote</button>
+                            <a href="product-wooden-skid.html" class="product-btn btn-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product: Shrink Wrapping -->
+                <div class="product-item" data-category="wrapping">
+                    <div class="product-image">
+                        <img src="assets/products/Shrink-Wrapping.jpeg" 
+                             alt="Shrink Wrapping" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="view-btn"><i class="fas fa-eye"></i></button>
+                            <button class="cart-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h3>Shrink Wrapping</h3>
+                        <p>Secure and protective shrink wrapping solutions for all cargo types.</p>
+                        <ul class="product-features">
+                            <li>Moisture and dust protection</li>
+                            <li>Customizable thickness options</li>
+                            <li>Cost-effective solution</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <button class="product-btn btn-quote">Get Quote</button>
+                            <a href="product-shrink-wrapping.html" class="product-btn btn-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product: Packing Materials -->
+                <div class="product-item" data-category="packing">
+                    <div class="product-image">
+                        <img src="assets/products/industrial-customized-protective-packing-materials-859.jpg" alt="Packing Materials" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="view-btn"><i class="fas fa-eye"></i></button>
+                            <button class="cart-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h3>Packing Materials</h3>
+                        <p>Reliable packing solutions to protect and secure goods during storage and transportation.</p>
+                        <ul class="product-features">
+                            <li>High-quality & durable materials</li>
+                            <li>Suitable for industrial and commercial use</li>
+                            <li>Customizable options available</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <button class="product-btn btn-quote">Get Quote</button>
+                            <a href="product-packing-materials.html" class="product-btn btn-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-item" data-category="materials">
+                    <div class="product-image">
+                        <img src="assets/products/packing-grade-plywood-12mm-ply-500x500.webp" alt="Plywood Packing" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="view-btn"><i class="fas fa-eye"></i></button>
+                            <button class="cart-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h3>Plywood for Packing</h3>
+                        <p>High-grade plywood sheets for heavy-duty packaging needs</p>
+                        <ul class="product-features">
+                            <li>Superior strength</li>
+                            <li>Moisture resistant</li>
+                            <li>Custom dimensions</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <button class="product-btn btn-quote">Get Quote</button>
+                            <a href="product-plywood.html" class="product-btn btn-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-item" data-category="materials">
+                    <div class="product-image">
+                        <img src="assets/products/LASHING-MATERIAL.jpg" alt="Lashing Materials" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="view-btn"><i class="fas fa-eye"></i></button>
+                            <button class="cart-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h3>Lashing Materials</h3>
+                        <p>Professional cargo securing equipment and accessories</p>
+                        <ul class="product-features">
+                            <li>Heavy-duty straps</li>
+                            <li>Certified quality</li>
+                            <li>Various capacities</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <button class="product-btn btn-quote">Get Quote</button>
+                            <a href="product-lashing-materials.html" class="product-btn btn-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-item" data-category="materials">
+                    <div class="product-image">
+                        <img src="assets/products/vaccum-packing.jpg" alt="Vacuum Packing" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="view-btn"><i class="fas fa-eye"></i></button>
+                            <button class="cart-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h3>Vacuum Packing</h3>
+                        <p>Advanced vacuum packaging technology for moisture-sensitive goods</p>
+                        <ul class="product-features">
+                            <li>Moisture protection</li>
+                            <li>Extended shelf life</li>
+                            <li>Custom solutions</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <button class="product-btn btn-quote">Get Quote</button>
+                            <a href="product-vacuum-packing.html" class="product-btn btn-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-item" data-category="materials">
+                    <div class="product-image">
+                        <img src="assets/machine-stretch-film-roll-500x500.jpg" alt="Stretch Film" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="view-btn"><i class="fas fa-eye"></i></button>
+                            <button class="cart-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h3>Stretch Film</h3>
+                        <p>High-quality stretch films for securing palletized loads</p>
+                        <ul class="product-features">
+                            <li>Superior cling properties</li>
+                            <li>Multiple thickness options</li>
+                            <li>UV resistant variants</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <button class="product-btn btn-quote">Get Quote</button>
+                            <a href="product-stretch-film.html" class="product-btn btn-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-item" data-category="materials">
+                    <div class="product-image">
+                        <img src="assets/corrugated-box-500x500.webp" alt="Corrugated Boxes" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="view-btn"><i class="fas fa-eye"></i></button>
+                            <button class="cart-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h3>Corrugated Boxes</h3>
+                        <p>Durable corrugated boxes for safe product transportation</p>
+                        <ul class="product-features">
+                            <li>Custom printing options</li>
+                            <li>Various flute types</li>
+                            <li>Eco-friendly materials</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <button class="product-btn btn-quote">Get Quote</button>
+                            <a href="product-corrugated-boxes.html" class="product-btn btn-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-item" data-category="pallets">
+                    <div class="product-image">
+                        <img src="assets/products/woodenpallets/plastic.webp" alt="Plastic Pallets" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="view-btn"><i class="fas fa-eye"></i></button>
+                            <button class="cart-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h3>Plastic Pallets</h3>
+                        <p>Lightweight, reusable pallets for hygiene and efficiency</p>
+                        <ul class="product-features">
+                            <li>Resistant to moisture and chemicals</li>
+                            <li>Available in multiple sizes</li>
+                            <li>Cost-effective & long-lasting</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <button class="product-btn btn-quote">Get Quote</button>
+                            <a href="product-plastic-pallets.html" class="product-btn btn-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-item" data-category="packing">
+                    <div class="product-image">
+                        <img src="assets/bubblewrap.jpg" alt="Bubble Wrap" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="view-btn"><i class="fas fa-eye"></i></button>
+                            <button class="cart-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h3>Bubble Wrap</h3>
+                        <p>Protective bubble wrap for cushioning fragile items</p>
+                        <ul class="product-features">
+                            <li>Various bubble sizes</li>
+                            <li>Antistatic options available</li>
+                            <li>Recyclable materials</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <button class="product-btn btn-quote">Get Quote</button>
+                            <a href="product-bubble-wrap.html" class="product-btn btn-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-item" data-category="packing">
+                    <div class="product-image">
+                        <img src="assets/3-65-heavy-duty-handheld-brown-packaging-tape-rolls-for-carton-original-imahcz9sswz2fvdg.webp" alt="Packaging Tape" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="view-btn"><i class="fas fa-eye"></i></button>
+                            <button class="cart-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h3>Packaging Tape</h3>
+                        <p>High-quality tapes for secure sealing of packages</p>
+                        <ul class="product-features">
+                            <li>Strong adhesive properties</li>
+                            <li>Various width options</li>
+                            <li>Printable surfaces</li>
+                        </ul>
+                        <div class="product-buttons">
+                            <button class="product-btn btn-quote">Get Quote</button>
+                            <a href="product-packaging-tape.html" class="product-btn btn-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Custom Packaging Solution -->
+    <section class="services">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Custom Solutions</span>
+                <h2 class="section-title">Need Customised Packaging Solution?</h2>
+                <p class="section-description">Our expert team delivers tailored packaging solutions designed to protect your products and optimize your supply chain efficiency.</p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-box-open" style="color: white;"></i>
+                    </div>
+                    <h3>Bespoke Design</h3>
+                    <p style="color: black;">Custom packaging solutions designed specifically for your products and shipping requirements.</p>
+                    <a href="/contact.html" class="service-link" >Get Quote <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-shield-alt" style="color: white;"></i>
+                    </div>
+                    <h3>Transit Protection</h3>
+                    <p style="color: black;">Advanced protection systems to keep your shipments safe during transportation.</p>
+                    <a href="/contact.html" class="service-link">Get Quote  <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-cogs" style="color: white;"></i>
+                    </div>
+                    <h3>Packaging Engineering</h3>
+                    <p style="color: black;">Expert engineering services to optimize your packaging for efficiency and protection.</p>
+                    <a href="/contact.html" class="service-link" >Get Quote  <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                     <img src="assets/logo.png" style="width: 300px;height: 100px; background-color: white;border-radius: 10px;object-fit: contain;height: auto;padding-bottom: 10px;" />
+                    <div class="social-links">
+                         <a href="https://www.instagram.com/sharmapackagings?igsh=d3I1bm91Z3Rxb3cx&utm_source=q" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/sharmapackagings?igsh=d3I1bm91Z3Rxb3cx&utm_source=q" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                       <a href="https://www.linkedin.com/in/hrithik-sharma-359a9b246?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                       <a href="mailto:sharmapackagings5@gmail.com" aria-label="Google"><i class="fab fa-google"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#products">Products</a></li>
+                        <li><a href="index.html#services">Services</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Products</h4>
+                    <ul>
+                        <li><a href="#">Wooden Pallets</a></li>
+                        <li><a href="#">Shrink Wrapping</a></li>
+                        <li><a href="#">Plywood Packing</a></li>
+                        <li><a href="#">Lashing Materials</a></li>
+                        <li><a href="#">Vacuum Packing</a></li>
+                        <li><a href="#">View More</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <div class="contact-info">
+                         <p><i class="fas fa-map-marker-alt"></i> 
+    Ground Floor, Shop No. 4, 5, 6, Prime Plaza, Amodar, Waghodia Road, Vadodara, Gujarat 390019
+  </p>
+                        <p><i class="fas fa-phone"></i> +91 87091 55299</p>
+                        <p><i class="fas fa-envelope"></i> info@sharmapackagings.com or sharmapackagings5@gmail.com  </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-links">
+                    <a href="https://drive.google.com/file/d/1nxb7b055N0Iy4S_8CJr2NusmMKmyCYbC/view?usp=sharing" download="https://drive.google.com/file/d/1nxb7b055N0Iy4S_8CJr2NusmMKmyCYbC/view?usp=sharing" class="brochure-link" style="color: white;">
+                        <i class="fas fa-download"></i> Download Brochure
+                    </a>
+
+                
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+                <p>&copy; 2025 Sharma Packaging. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="scroll-top" class="scroll-top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Image Lightbox Modal -->
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-content">
+            <span class="lightbox-close">&times;</span>
+            <img id="lightbox-image" src="" alt="">
+            <div class="lightbox-caption"></div>
+        </div>
+    </div>
+
+    <!-- Floating Call, Email & WhatsApp Buttons -->
+    <div class="contact-buttons">
+        <a href="https://wa.me/918709155299" class="contact-btn whatsapp-btn" title="Chat on WhatsApp" target="_blank">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+        <a href="tel:+918709155299" class="contact-btn call-btn" title="Call Us">
+            <i class="fas fa-phone"></i>
+        </a>
+        <a href="mailto:sharmapackagings5@gmail.com" class="contact-btn email-btn" title="Email Us">
+            <i class="fas fa-envelope"></i>
+        </a>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="scripts.js"></script>
+</body>
+<script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'},{'ap':'cpsh-oh'},{'server':'sg2plzcpnl505655'},{'dcenter':'sg2'},{'cp_id':'10018147'},{'cp_cl':'8'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src='https://img1.wsimg.com/traffic-assets/js/tccl.min.js'></script></html>

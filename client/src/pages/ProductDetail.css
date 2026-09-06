@@ -1,0 +1,248 @@
+.breadcrumb-section {
+  background-color: var(--bg-light);
+  border-bottom: 1px solid var(--border-color);
+  padding: 16px 0;
+}
+
+.breadcrumb-trail {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.breadcrumb-trail a {
+  color: var(--navy-dark);
+  font-weight: 500;
+}
+
+.breadcrumb-trail a:hover {
+  color: var(--blue-royal);
+}
+
+.breadcrumb-trail .current {
+  color: var(--blue-royal);
+  font-weight: 600;
+}
+
+.product-main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: flex-start;
+}
+
+.p-main-img-box {
+  position: relative;
+  aspect-ratio: 4/3;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+}
+
+.p-main-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.p-cat-tag {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: var(--navy-dark);
+  color: var(--white);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.p-thumbs-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.thumb-btn {
+  width: 80px;
+  height: 60px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 2px solid var(--border-color);
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  transition: var(--transition);
+}
+
+.thumb-btn.is-active,
+.thumb-btn:hover {
+  border-color: var(--blue-royal);
+}
+
+.thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.p-title {
+  margin-bottom: 16px;
+}
+
+.p-short-desc {
+  font-size: 1.1rem;
+  color: var(--navy-dark);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.p-benefits-box {
+  background-color: var(--bg-light);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 32px;
+  border: 1px solid var(--border-color);
+}
+
+.p-benefits-box h4 {
+  margin-bottom: 16px;
+  font-size: 1.05rem;
+}
+
+.p-benefits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.p-benefits-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.95rem;
+  color: var(--navy-dark);
+  font-weight: 500;
+}
+
+.b-check-icon {
+  color: var(--blue-royal);
+  font-size: 1.1rem;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.p-cta-box {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.p-trust-callout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.t-icon {
+  color: var(--amber-accent);
+  font-size: 1.2rem;
+}
+
+/* Specs & Overview Section */
+.p-specs-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 32px;
+}
+
+.app-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.app-list li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.app-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--blue-royal);
+  font-weight: bold;
+}
+
+.specs-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.specs-table th, .specs-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+  font-size: 0.92rem;
+}
+
+.specs-table th {
+  color: var(--navy-dark);
+  font-weight: 600;
+  width: 40%;
+  background-color: var(--bg-light);
+}
+
+.specs-table td {
+  color: var(--text-muted);
+}
+
+/* Sticky Mobile CTA */
+.sticky-mobile-cta {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--navy-dark);
+  color: var(--white);
+  padding: 14px 20px;
+  z-index: 1000;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.sticky-mobile-cta strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.sticky-mobile-cta span {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 992px) {
+  .product-main-grid, .p-specs-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .sticky-mobile-cta {
+    display: flex;
+  }
+}

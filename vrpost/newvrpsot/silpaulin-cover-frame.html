@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Silpaulin Cover Frame Post</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=Outfit:wght@700;800;900&display=swap');
+
+      :root {
+        --navy: #073166;
+        --navy-dark: #031b3a;
+        --orange: #f06413;
+        --orange-dark: #d64a00;
+        --text: #0e2448;
+        --muted: #5a6880;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #ffffff;
+        font-family: Inter, Arial, sans-serif;
+      }
+
+      .poster {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        isolation: isolate;
+        background:
+          linear-gradient(135deg, rgba(3, 27, 58, 0.04), rgba(255,255,255,0) 34%),
+          linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+        color: var(--text);
+      }
+
+      .poster::before {
+        content: "";
+        position: absolute;
+        top: -80px;
+        left: -120px;
+        width: 360px;
+        height: 420px;
+        background: linear-gradient(145deg, var(--navy), #0b4b93);
+        clip-path: polygon(0 0, 100% 0, 42% 100%, 0 100%);
+        z-index: 0;
+      }
+
+      .poster::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          radial-gradient(circle, rgba(240, 100, 19, 0.42) 1.7px, transparent 2px),
+          linear-gradient(135deg, transparent 0 72%, rgba(3,27,58,0.045) 72.2% 72.5%, transparent 72.7% 100%);
+        background-size: 22px 22px, 100% 100%;
+        background-position: 8px 910px, 0 0;
+        opacity: 0.28;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .accent-line {
+        position: absolute;
+        top: -18px;
+        left: 192px;
+        width: 26px;
+        height: 240px;
+        background: var(--orange);
+        transform: rotate(33deg);
+        border-radius: 14px;
+        box-shadow: 32px 0 0 rgba(7, 49, 102, 0.18);
+        z-index: 1;
+      }
+
+      .hex {
+        position: absolute;
+        top: 24px;
+        right: -54px;
+        width: 240px;
+        height: 360px;
+        opacity: 0.11;
+        background:
+          linear-gradient(30deg, transparent 24%, var(--navy) 25% 27%, transparent 28% 72%, var(--navy) 73% 75%, transparent 76%),
+          linear-gradient(90deg, transparent 24%, var(--navy) 25% 27%, transparent 28% 72%, var(--navy) 73% 75%, transparent 76%);
+        background-size: 96px 56px;
+        z-index: 1;
+      }
+
+      .brand {
+        position: absolute;
+        top: 32px;
+        left: 170px;
+        right: 170px;
+        text-align: center;
+        z-index: 2;
+      }
+
+      .brand img {
+        width: 250px;
+        height: 250px;
+        object-fit: contain;
+        margin: 0 auto -10px;
+      }
+
+      .brand-name {
+        font-family: Outfit, Inter, sans-serif;
+        font-size: 42px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--navy);
+        line-height: 1;
+      }
+
+      .brand-name span {
+        color: var(--orange);
+      }
+
+      .tagline {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 14px;
+        color: #111827;
+        font-size: 22px;
+        font-weight: 700;
+      }
+
+      .tagline::before,
+      .tagline::after {
+        content: "";
+        width: 58px;
+        height: 3px;
+        border-radius: 3px;
+        background: var(--orange);
+      }
+
+      .shield {
+        width: 34px;
+        height: 38px;
+        display: inline-grid;
+        place-items: center;
+        border: 3px solid var(--navy);
+        border-radius: 16px 16px 20px 20px;
+        color: var(--orange);
+        font-size: 19px;
+        font-weight: 900;
+      }
+
+      .headline {
+        position: absolute;
+        top: 422px;
+        left: 90px;
+        right: 90px;
+        text-align: center;
+        font-family: Outfit, Inter, sans-serif;
+        text-transform: uppercase;
+        z-index: 2;
+      }
+
+      .headline .small {
+        color: var(--navy);
+        font-size: 48px;
+        line-height: 1;
+        font-weight: 900;
+        letter-spacing: 2px;
+      }
+
+      .headline .product {
+        margin-top: 10px;
+        color: var(--orange);
+        font-size: 78px;
+        line-height: 0.94;
+        font-weight: 900;
+        letter-spacing: 1px;
+      }
+
+      .headline .support {
+        margin-top: 10px;
+        color: var(--navy);
+        font-size: 42px;
+        line-height: 1.05;
+        font-weight: 900;
+        letter-spacing: 2px;
+      }
+
+      .badges {
+        position: absolute;
+        top: 662px;
+        left: 120px;
+        right: 120px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        align-items: center;
+        z-index: 2;
+      }
+
+      .badge {
+        display: grid;
+        grid-template-columns: 58px 1fr;
+        gap: 12px;
+        align-items: center;
+        color: var(--navy);
+        font-size: 18px;
+        font-weight: 900;
+        line-height: 1.15;
+        text-transform: uppercase;
+      }
+
+      .badge-icon {
+        width: 56px;
+        height: 56px;
+        display: grid;
+        place-items: center;
+        border: 4px solid var(--navy);
+        border-radius: 18px;
+        color: var(--orange);
+        font-size: 24px;
+        font-weight: 900;
+      }
+
+      .photo-frame {
+        position: absolute;
+        top: 775px;
+        left: 76px;
+        right: 76px;
+        height: 612px;
+        border-radius: 42px;
+        background: #ffffff;
+        border: 8px solid var(--navy);
+        box-shadow:
+          0 0 0 8px #ffffff,
+          10px -10px 0 var(--orange),
+          0 24px 54px rgba(3, 27, 58, 0.18);
+        overflow: hidden;
+      }
+
+      .photo-frame::before {
+        content: "";
+        position: absolute;
+        inset: 14px;
+        z-index: 3;
+        border-radius: 29px;
+        border: 2px solid rgba(255,255,255,0.42);
+        pointer-events: none;
+      }
+
+      .photo-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+        filter: contrast(1.08) brightness(1.1) saturate(1.08);
+      }
+
+      .photo-frame .photo-title {
+        position: absolute;
+        left: 34px;
+        right: 34px;
+        bottom: 34px;
+        z-index: 4;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 18px;
+        padding: 20px 24px;
+        border-radius: 22px;
+        background: rgba(3, 27, 58, 0.88);
+        color: #ffffff;
+        box-shadow: 0 16px 36px rgba(0,0,0,0.24);
+      }
+
+      .photo-title strong {
+        font-family: Outfit, Inter, sans-serif;
+        font-size: 35px;
+        letter-spacing: 1px;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .photo-title span {
+        color: #ffd8c3;
+        font-size: 18px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .illustration-left {
+        position: absolute;
+        left: -4px;
+        bottom: 322px;
+        width: 260px;
+        height: 210px;
+        background:
+          radial-gradient(circle at 52% 58%, #0f58ad 0 36px, transparent 37px),
+          linear-gradient(135deg, #0a3d7e, #06275a);
+        clip-path: polygon(0 50%, 45% 4%, 100% 40%, 82% 100%, 0 100%);
+        opacity: 0.95;
+      }
+
+      .illustration-right {
+        position: absolute;
+        right: -32px;
+        bottom: 318px;
+        width: 310px;
+        height: 190px;
+        background:
+          linear-gradient(90deg, #ff6a16 0 18%, #0a58af 18% 38%, #ff6a16 38% 55%, #0a58af 55% 100%);
+        clip-path: polygon(0 55%, 72% 25%, 100% 56%, 88% 92%, 0 100%);
+        opacity: 0.96;
+      }
+
+      .contact-card {
+        position: absolute;
+        left: 72px;
+        right: 72px;
+        bottom: 72px;
+        min-height: 315px;
+        padding: 28px 34px 88px;
+        border-radius: 38px;
+        background:
+          linear-gradient(135deg, rgba(7,49,102,0.98), rgba(2,26,58,0.98));
+        color: #ffffff;
+        border: 3px solid rgba(255,255,255,0.4);
+        box-shadow: 0 28px 60px rgba(3, 27, 58, 0.3);
+      }
+
+      .contact-row {
+        display: grid;
+        grid-template-columns: 64px 1fr;
+        gap: 18px;
+        align-items: center;
+        padding: 13px 0;
+        border-bottom: 2px solid rgba(255,255,255,0.55);
+        font-size: 24px;
+        line-height: 1.3;
+        font-weight: 800;
+      }
+
+      .contact-row:last-of-type {
+        border-bottom: none;
+      }
+
+      .contact-icon {
+        width: 54px;
+        height: 54px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: #ffffff;
+        color: var(--navy);
+        border: 4px solid var(--orange);
+        font-size: 24px;
+        font-weight: 900;
+      }
+
+      .quote {
+        position: absolute;
+        left: 170px;
+        right: 170px;
+        bottom: 22px;
+        height: 92px;
+        display: grid;
+        grid-template-columns: 1fr 70px;
+        gap: 16px;
+        align-items: center;
+        padding: 0 32px 0 78px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #ff7d20, var(--orange-dark));
+        color: #ffffff;
+        border: 5px solid #ffffff;
+        box-shadow:
+          0 0 0 4px var(--orange),
+          0 18px 34px rgba(173, 62, 0, 0.35);
+        font-family: Outfit, Inter, sans-serif;
+        font-size: 42px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      .arrow {
+        width: 62px;
+        height: 62px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        border: 5px solid #ffffff;
+        font-size: 40px;
+        line-height: 1;
+      }
+
+      .bottom-wave {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 210px;
+        background:
+          radial-gradient(circle at 82% 42%, rgba(255,255,255,0.12), transparent 24%),
+          linear-gradient(135deg, #05265a, #031936);
+        clip-path: polygon(0 44%, 100% 20%, 100% 100%, 0 100%);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="poster">
+      <div class="accent-line"></div>
+      <div class="hex"></div>
+
+      <section class="brand">
+        <img src="assets/logo.png" alt="Sharma Packaging Logo" />
+        <div class="brand-name"><span>V R</span> Packaging Solutions</div>
+        <div class="tagline"><span class="shield">OK</span> Manufacturer of VCI & Seaworthy Packaging solution</div>
+      </section>
+
+      <section class="headline">
+        <div class="small">Manufacturer of</div>
+        <div class="product">Silpaulin Cover</div>
+        <div class="support">Packaging Solutions</div>
+      </section>
+
+      <section class="badges">
+        <div class="badge"><div class="badge-icon">B</div><div>Industrial<br />Packaging</div></div>
+        <div class="badge"><div class="badge-icon">OK</div><div>Export<br />Protection</div></div>
+        <div class="badge"><div class="badge-icon">S</div><div>Seaworthy<br />Solutions</div></div>
+      </section>
+
+      <section class="photo-frame">
+        <img src="assets/silpaulin-cover-site.jpeg" alt="Silpaulin Cover" />
+        <div class="photo-title">
+          <strong>Silpaulin Cover</strong>
+          <span>Heavy Duty Protection</span>
+        </div>
+      </section>
+
+      <div class="illustration-left"></div>
+      <div class="illustration-right"></div>
+      <div class="bottom-wave"></div>
+
+      <section class="contact-card">
+        <div class="contact-row">
+          <div class="contact-icon">A</div>
+          <div>253/19-A, Opp. Columbia Machine Pvt Ltd, GIDC Industrial Estate, Makarpura, Vadodara - 390010, Gujarat</div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">P</div>
+          <div>+91 7384 11611</div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">E</div>
+          <div>vijay@sharmapackagings.com</div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">W</div>
+          <div>www.sharmapackagings.com/</div>
+        </div>
+      </section>
+
+      <div class="quote">Get Quote <div class="arrow">&gt;</div></div>
+    </main>
+  </body>
+</html>

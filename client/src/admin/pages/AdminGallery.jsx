@@ -1,0 +1,416 @@
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { FaPlus, FaEdit, FaTrash, FaEye, FaEyeSlash, FaImage } from 'react-icons/fa';
+import api, { API_URL } from '../../utils/api';
+
+const DEFAULT_GALLERY = [
+  { _id: 'g-1', title: 'ISPM 15 Wooden Crate Assembly', category: 'Seaworthy Packing', image: '/uploads/seaworthy_packing.jpg', mediaType: 'image', isActive: true },
+  { _id: 'g-2', title: 'VCI Film Roll Vacuum Heat Sealing', category: 'VCI Products', image: '/uploads/vaccum-packing.jpg', mediaType: 'image', isActive: true },
+  { _id: 'g-3', title: 'Heavy Machinery Protective Shrink Wrapping', category: 'Shrink Packing', image: '/uploads/Shrink-Wrapping.jpeg', mediaType: 'image', isActive: true },
+  { _id: 'g-4', title: 'Aluminium Barrier Foil Hermetic Preservation', category: 'Barrier Foil Packing', image: '/uploads/aluminium_foil_preservation.jpg', mediaType: 'image', isActive: true },
+  { _id: 'g-5', title: 'Custom Silpaulin Waterproof Tarpaulin Cover', category: 'Silpaulin Covers', image: '/uploads/tarpaulin.jpg', mediaType: 'image', isActive: true },
+  { _id: 'g-6', title: 'Overdimensional Cargo Lashing & Packing', category: 'Industrial Packaging', image: '/uploads/odc_cargo_packing.jpg', mediaType: 'image', isActive: true },
+  { _id: 'g-7', title: 'Heavy Duty Wooden Pallet Fabrication', category: 'Seaworthy Packing', image: '/uploads/Wooden-Pallets.jpg', mediaType: 'image', isActive: true },
+  { _id: 'g-8', title: 'Industrial Custom Protective Packing Materials', category: 'Films & Rolls', image: '/uploads/industrial-customized-protective-packing-materials-859.jpg', mediaType: 'image', isActive: true }
+];
+
+export default function AdminGallery() {
+  const [images, setImages] = useState(DEFAULT_GALLERY);
+  const [editing, setEditing] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  
+  const [form, setForm] = useState({
+    title: '',
+    category: '',
+    caption: '',
+    image: '',
+    mediaType: 'image',
+    slug: '',
+    metaTitle: '',
+    metaDescription: '',
+    keywords: '',
+    isActive: true
+  });
+
+  const categories = [
+    'VCI Products',
+    'Films & Rolls',
+    'Seaworthy Packing',
+    'Shrink Packing',
+    'Silpaulin Covers',
+    'Barrier Foil Packing',
+    'Industrial Packaging',
+    'Factory Process'
+  ];
+
+  const load = () => {
+    api.get('/gallery/admin/all')
+      .then(r => {
+        if (Array.isArray(r.data) && r.data.length > 0) {
+          setImages(r.data.filter(item => item.mediaType !== 'video'));
+        } else {
+          setImages(DEFAULT_GALLERY);
+        }
+      })
+      .catch(() => setImages(DEFAULT_GALLERY));
+  };
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const fd = new FormData();
+    fd.append('file', file);
+    setUploadingImage(true);
+
+    try {
+      const { data } = await api.post('/upload', fd, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      setForm(prev => ({
+        ...prev,
+        image: data.url,
+        title: prev.title || file.name.replace(/\.[^/.]+$/, "")
+      }));
+      toast.success('Image uploaded successfully');
+    } catch {
+      toast.error('File upload failed');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!form.image) {
+      toast.error('Please upload an image first');
+      return;
+    }
+
+    try {
+      const payload = { ...form, mediaType: 'image' };
+      if (editing) {
+        await api.put(`/gallery/admin/${editing}`, payload);
+        toast.success('Gallery item updated');
+      } else {
+        await api.post('/gallery/admin', payload);
+        toast.success('Gallery item created');
+      }
+      
+      resetForm();
+      load();
+    } catch {
+      toast.error('Error saving gallery item');
+    }
+  };
+
+  const editItem = (img) => {
+    setForm({
+      title: img.title || '',
+      category: img.category || '',
+      caption: img.caption || '',
+      image: img.image || '',
+      mediaType: 'image',
+      slug: img.slug || '',
+      metaTitle: img.metaTitle || '',
+      metaDescription: img.metaDescription || '',
+      keywords: img.keywords || '',
+      isActive: img.isActive !== false
+    });
+    setEditing(img._id);
+    setShowForm(true);
+  };
+
+  const toggleActive = async (img) => {
+    try {
+      await api.put(`/gallery/admin/${img._id}`, { isActive: !img.isActive });
+      toast.success('Status updated');
+      load();
+    } catch {
+      toast.error('Failed to update status');
+    }
+  };
+
+  const deleteItem = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this gallery item?')) return;
+    try {
+      await api.delete(`/gallery/admin/${id}`);
+      toast.success('Gallery item deleted');
+      load();
+    } catch {
+      toast.error('Failed to delete item');
+    }
+  };
+
+  const resetForm = () => {
+    setForm({
+      title: '',
+      category: '',
+      caption: '',
+      image: '',
+      mediaType: 'image',
+      slug: '',
+      metaTitle: '',
+      metaDescription: '',
+      keywords: '',
+      isActive: true
+    });
+    setEditing(null);
+    setShowForm(false);
+  };
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 30 }}>
+        <h2>Gallery Manager ({images.length})</h2>
+        <button 
+          className="btn btn-primary" 
+          onClick={() => {
+            if (showForm) resetForm();
+            else setShowForm(true);
+          }}
+        >
+          {showForm ? 'Cancel' : <><FaPlus /> Add Gallery Item</>}
+        </button>
+      </div>
+
+      {showForm && (
+        <div className="card" style={{ marginBottom: 30 }}>
+          <h3 style={{ marginBottom: 20 }}>{editing ? 'Edit Gallery Item' : 'Add New Gallery Item'}</h3>
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-2">
+              <div className="form-group">
+                <label>Title *</label>
+                <input 
+                  type="text" 
+                  name="title" 
+                  className="form-control" 
+                  required 
+                  value={form.title} 
+                  onChange={handleInputChange} 
+                  placeholder="e.g. VCI Film Roll Packing"
+                />
+              </div>
+              <div className="form-group">
+                <label>Category *</label>
+                <select 
+                  name="category" 
+                  className="form-control" 
+                  required 
+                  value={form.category} 
+                  onChange={handleInputChange}
+                >
+                  <option value="">Select Category</option>
+                  {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+            </div>
+
+            {/* Media specifics */}
+            <div style={{ background: '#f8fafc', padding: 20, borderRadius: 'var(--radius-md)', margin: '20px 0', border: '1px solid #e2e8f0' }}>
+              <h4 style={{ marginBottom: 15, fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <FaImage /> Image Details
+              </h4>
+
+              <div className="grid grid-2">
+                <div className="form-group">
+                  <label>Image File *</label>
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    className="form-control" 
+                    required={!form.image}
+                    onChange={handleFileUpload} 
+                  />
+                  {uploadingImage && <span style={{ fontSize: '0.85rem', color: 'var(--orange)' }}>Uploading image...</span>}
+                </div>
+                <div className="form-group">
+                  <label>Image Preview</label>
+                  {form.image ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <img 
+                        src={form.image.startsWith('http') ? form.image : `${API_URL}${form.image}`} 
+                        alt="Preview" 
+                        style={{ height: 60, width: 80, objectFit: 'cover', borderRadius: 'var(--radius-sm)' }} 
+                      />
+                      <span style={{ fontSize: '0.8rem', color: 'var(--grey)', wordBreak: 'break-all' }}>{form.image}</span>
+                    </div>
+                  ) : (
+                    <div style={{ height: 60, width: 80, border: '2px dashed #ddd', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: '0.75rem' }}>No Image</div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Caption / Project Description</label>
+              <textarea 
+                name="caption" 
+                className="form-control" 
+                rows={3} 
+                value={form.caption} 
+                onChange={handleInputChange} 
+                placeholder="Describe this packaging project..."
+              />
+            </div>
+
+            <div style={{ background: '#f8fafc', padding: 20, borderRadius: 'var(--radius-md)', margin: '20px 0', border: '1px solid #e2e8f0' }}>
+              <h4 style={{ marginBottom: 15, fontSize: '0.95rem' }}>SEO Settings (Optional)</h4>
+              <div className="grid grid-2">
+                <div className="form-group">
+                  <label>Custom Slug</label>
+                  <input 
+                    type="text" 
+                    name="slug" 
+                    className="form-control" 
+                    value={form.slug} 
+                    onChange={handleInputChange} 
+                    placeholder="e.g. custom-slug-value"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>SEO Meta Title</label>
+                  <input 
+                    type="text" 
+                    name="metaTitle" 
+                    className="form-control" 
+                    value={form.metaTitle} 
+                    onChange={handleInputChange} 
+                  />
+                </div>
+              </div>
+              <div className="grid grid-2">
+                <div className="form-group">
+                  <label>SEO Meta Description</label>
+                  <input 
+                    type="text" 
+                    name="metaDescription" 
+                    className="form-control" 
+                    value={form.metaDescription} 
+                    onChange={handleInputChange} 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Keywords</label>
+                  <input 
+                    type="text" 
+                    name="keywords" 
+                    className="form-control" 
+                    value={form.keywords} 
+                    onChange={handleInputChange} 
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>
+                <input 
+                  type="checkbox" 
+                  name="isActive" 
+                  checked={form.isActive} 
+                  onChange={handleInputChange} 
+                  style={{ marginRight: 8 }} 
+                />
+                Active (Show in public gallery)
+              </label>
+            </div>
+
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button type="submit" className="btn btn-primary" disabled={uploadingImage}>
+                {editing ? 'Update Item' : 'Create Item'}
+              </button>
+              <button type="button" className="btn btn-outline-dark" onClick={resetForm}>
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      <div className="card">
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ borderBottom: '2px solid var(--grey-light)', textAlign: 'left' }}>
+              <th style={{ padding: '12px' }}>Thumbnail</th>
+              <th style={{ padding: '12px' }}>Title</th>
+              <th style={{ padding: '12px' }}>Category</th>
+              <th style={{ padding: '12px' }}>Status</th>
+              <th style={{ padding: '12px' }}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {images.map(img => (
+              <tr key={img._id} style={{ borderBottom: '1px solid var(--grey-light)' }}>
+                <td style={{ padding: '12px' }}>
+                  {img.image ? (
+                    <img 
+                      src={img.image.startsWith('http') ? img.image : `${API_URL}${img.image}`} 
+                      alt="" 
+                      style={{ width: 50, height: 50, objectFit: 'cover', borderRadius: 'var(--radius-sm)' }} 
+                    />
+                  ) : (
+                    <span style={{ color: 'var(--grey)', fontSize: '0.8rem' }}>No Image</span>
+                  )}
+                </td>
+                <td style={{ padding: '12px', fontWeight: 600 }}>{img.title || 'Unnamed Item'}</td>
+                <td style={{ padding: '12px', color: 'var(--grey)' }}>{img.category}</td>
+                <td style={{ padding: '12px' }}>
+                  <span className={`badge ${img.isActive !== false ? 'badge-blue' : 'badge-orange'}`}>
+                    {img.isActive !== false ? 'Active' : 'Inactive'}
+                  </span>
+                </td>
+                <td style={{ padding: '12px' }}>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <button 
+                      onClick={() => editItem(img)} 
+                      className="btn btn-sm btn-secondary" 
+                      title="Edit"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button 
+                      onClick={() => toggleActive(img)} 
+                      className="btn btn-sm btn-outline-dark" 
+                      title="Toggle Visibility"
+                    >
+                      {img.isActive !== false ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                    <button 
+                      onClick={() => deleteItem(img._id)} 
+                      className="btn btn-sm" 
+                      style={{ background: 'var(--danger)', color: 'white', border: 'none', padding: '8px 12px', borderRadius: 'var(--radius-sm)', cursor: 'pointer' }} 
+                      title="Delete"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+            {images.length === 0 && (
+              <tr>
+                <td colSpan={5} style={{ padding: '24px', textAlign: 'center', color: 'var(--grey)' }}>
+                  No gallery items found. Click 'Add Gallery Item' to create one.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
