@@ -18,6 +18,20 @@ const BASE_HOST = trimTrailingSlash(configuredApiBase || defaultApiBase);
 const API_BASE = `${BASE_HOST}/api`;
 const SOCKET_URL = BASE_HOST || (typeof window !== 'undefined' ? window.location.origin : '');
 
+const getCleanId = (val) => {
+  if (!val) return '';
+  if (typeof val === 'string') return val;
+  if (typeof val === 'object') {
+    if (val._id) return getCleanId(val._id);
+    if (val.id) return getCleanId(val.id);
+    if (typeof val.toString === 'function') {
+      const s = val.toString();
+      if (s !== '[object Object]') return s;
+    }
+  }
+  return String(val);
+};
+
 export default function AdminChatbot() {
   const { token, user: adminUser } = useAuth();
   
@@ -72,7 +86,7 @@ export default function AdminChatbot() {
       });
       setConversations(sortedList);
       if (!selectedConvIdRef.current && sortedList.length > 0) {
-        const initialId = sortedList[0]._id || sortedList[0].id;
+        const initialId = getCleanId(sortedList[0]._id || sortedList[0].id);
         setSelectedConvId(initialId);
       }
     } catch (err) {
@@ -83,18 +97,19 @@ export default function AdminChatbot() {
   // Fetch active conversation detail & messages
   const fetchActiveConversationDetail = useCallback(async (convId) => {
     if (!convId) return;
+    const cleanId = getCleanId(convId);
     try {
-      const res = await adminApi.get(`/chat/admin/conversations/${convId}`);
+      const res = await adminApi.get(`/chat/admin/conversations/${cleanId}`);
       setActiveConv(res.data.conversation);
       const dbMsgs = res.data.messages || [];
       setMessages((prev) => {
         const map = new Map();
         prev.forEach((m) => {
-          const key = String(m._id || m.idempotencyId || '');
+          const key = getCleanId(m._id || m.idempotencyId);
           if (key) map.set(key, m);
         });
         dbMsgs.forEach((m) => {
-          const key = String(m._id || m.idempotencyId || '');
+          const key = getCleanId(m._id || m.idempotencyId);
           if (key) map.set(key, m);
         });
         return Array.from(map.values()).sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
@@ -112,9 +127,10 @@ export default function AdminChatbot() {
 
   useEffect(() => {
     if (selectedConvId) {
-      fetchActiveConversationDetail(selectedConvId);
+      const cleanId = getCleanId(selectedConvId);
+      fetchActiveConversationDetail(cleanId);
       if (socketRef.current && socketRef.current.connected) {
-        socketRef.current.emit('conversation:join', { conversationId: selectedConvId });
+        socketRef.current.emit('conversation:join', { conversationId: cleanId });
       }
     }
   }, [selectedConvId, fetchActiveConversationDetail]);
@@ -133,18 +149,19 @@ export default function AdminChatbot() {
     socketRef.current = socket;
 
     socket.on('connect', () => {
-      const activeId = selectedConvIdRef.current;
+      const activeId = getCleanId(selectedConvIdRef.current);
       if (activeId) {
         socket.emit('conversation:join', { conversationId: activeId });
       }
     });
 
     socket.on('message:new', (msg) => {
-      const activeId = String(selectedConvIdRef.current || '');
-      const msgConvId = String(msg?.conversationId?._id || msg?.conversationId || msg?.conversation || '');
+      const activeId = getCleanId(selectedConvIdRef.current);
+      const msgConvId = getCleanId(msg?.conversationId || msg?.conversation);
       if (activeId && msgConvId && msgConvId === activeId) {
         setMessages((prev) => {
-          if (prev.some((m) => String(m._id) === String(msg._id) || (msg.idempotencyId && m.idempotencyId === msg.idempotencyId))) {
+          const msgId = getCleanId(msg._id || msg.idempotencyId);
+          if (prev.some((m) => getCleanId(m._id || m.idempotencyId) === msgId)) {
             return prev;
           }
           return [...prev, msg];
@@ -155,20 +172,15 @@ export default function AdminChatbot() {
 
     socket.on('conversation:updated', ({ conversation, lastMessage }) => {
       fetchConversations();
-      const activeId = String(selectedConvIdRef.current || '');
-      const targetConvId = String(
-        conversation?._id || 
-        conversation?.id || 
-        lastMessage?.conversationId?._id || 
-        lastMessage?.conversationId || 
-        lastMessage?.conversation || 
-        ''
-      );
+      const activeId = getCleanId(selectedConvIdRef.current);
+      const convId = getCleanId(conversation?._id || conversation?.id || conversation);
+      const msgConvId = getCleanId(lastMessage?.conversationId || lastMessage?.conversation);
 
-      if (activeId && targetConvId && targetConvId === activeId) {
+      if (activeId && (convId === activeId || msgConvId === activeId)) {
         if (lastMessage) {
           setMessages((prev) => {
-            if (prev.some((m) => String(m._id) === String(lastMessage._id) || (lastMessage.idempotencyId && m.idempotencyId === lastMessage.idempotencyId))) {
+            const msgId = getCleanId(lastMessage._id || lastMessage.idempotencyId);
+            if (prev.some((m) => getCleanId(m._id || m.idempotencyId) === msgId)) {
               return prev;
             }
             return [...prev, lastMessage];
