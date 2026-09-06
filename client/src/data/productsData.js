@@ -17,8 +17,8 @@ export const PRODUCTS = [
       'Custom-cut dimensions engineered for machinery & project cargo',
       'Kiln-dried hardwood & pine timber with moisture content under 18%'
     ],
-    image: '/uploads/prod_1.png',
-    gallery: ['/uploads/prod_1.png', '/uploads/Wooden-Pallets.jpg', '/uploads/seaworthy_packing.jpg'],
+    image: '/uploads/Wooden-Pallets.png',
+    gallery: ['/uploads/Wooden-Pallets.png', '/uploads/Wooden-Pallets.jpg', '/uploads/seaworthy_packing.jpg'],
     specs: {
       'Dynamic Load Capacity': 'Up to 5,000 kg',
       'Static Load Capacity': 'Up to 10,000 kg',
