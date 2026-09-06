@@ -58,9 +58,15 @@ export default function AdminChatbot() {
       const res = await adminApi.get('/chat/admin/conversations', {
         params: { search: searchTerm, status: statusFilter }
       });
-      setConversations(res.data || []);
-      if (!selectedConvId && res.data && res.data.length > 0) {
-        setSelectedConvId(res.data[0]._id || res.data[0].id);
+      const rawList = res.data || [];
+      const sortedList = [...rawList].sort((a, b) => {
+        const timeA = new Date(a.lastMessageTime || a.updatedAt || a.createdAt || 0).getTime();
+        const timeB = new Date(b.lastMessageTime || b.updatedAt || b.createdAt || 0).getTime();
+        return timeB - timeA;
+      });
+      setConversations(sortedList);
+      if (!selectedConvId && sortedList.length > 0) {
+        setSelectedConvId(sortedList[0]._id || sortedList[0].id);
       }
     } catch (err) {
       console.warn('Error fetching admin conversations:', err);
@@ -216,6 +222,7 @@ export default function AdminChatbot() {
     const idempotencyId = 'msg-admin-' + Date.now();
     const messageData = {
       conversationId: selectedConvId,
+      senderType: 'admin',
       message: textToSend,
       messageType: attachmentObj ? attachmentObj.messageType : 'text',
       attachmentUrl: attachmentObj ? attachmentObj.url : '',

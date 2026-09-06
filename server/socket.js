@@ -76,7 +76,7 @@ function initSocket(server) {
         if (!conversationId) return;
 
         let msgRecord = null;
-        const senderType = isCustomer ? 'customer' : 'admin';
+        const senderType = data.senderType || (isCustomer ? 'customer' : 'admin');
 
         if (mongoose.connection.readyState === 1) {
           try {
