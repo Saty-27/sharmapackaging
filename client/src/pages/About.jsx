@@ -37,7 +37,12 @@ export default function About() {
           </div>
 
           <div className="story-img-wrapper">
-            <img src="/uploads/about_us_facility.jpg" alt="Packaging Facility" className="story-img" />
+            <img 
+              src="/uploads/about_us_facility.jpg" 
+              onError={(e) => { e.target.onerror = null; e.target.src = '/about_us_facility.jpg'; }}
+              alt="Sharma Packaging Facility" 
+              className="story-img" 
+            />
           </div>
         </div>
       </section>

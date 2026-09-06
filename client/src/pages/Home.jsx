@@ -451,7 +451,7 @@ export default function Home() {
           <div className="about-visual">
             <img 
               src="/uploads/about_us_facility.jpg" 
-              onError={(e) => { e.target.onerror = null; e.target.src = '/uploads/hero_bg.png'; }} 
+              onError={(e) => { e.target.onerror = null; e.target.src = '/about_us_facility.jpg'; }} 
               alt="Sharma Packaging - Heavy-Duty Industrial Packaging, Wooden Crating & ISPM 15 Certified Export Protection" 
               title="Sharma Packaging - Engineered Industrial Protection"
               className="about-img" 
