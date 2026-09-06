@@ -357,3 +357,55 @@ ul {
     font-size: 0.95rem;
   }
 }
+
+/* Card & Button Responsive Mobile Optimization */
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  width: 100%;
+}
+
+.card-actions .btn {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  text-align: center;
+  justify-content: center;
+  padding: 10px 14px;
+}
+
+@media (max-width: 640px) {
+  .card-body, .sol-card-body, .blog-card-body {
+    padding: 20px 16px;
+  }
+
+  .card-actions {
+    gap: 8px;
+  }
+
+  .card-actions .btn {
+    padding: 9px 8px;
+    font-size: 0.84rem;
+    letter-spacing: -0.01em;
+  }
+
+  .btn-sm {
+    padding: 9px 12px;
+    font-size: 0.86rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .card-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .card-actions .btn {
+    width: 100%;
+    white-space: normal;
+  }
+}
+
