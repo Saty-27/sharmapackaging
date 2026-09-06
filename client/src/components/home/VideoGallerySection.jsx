@@ -9,7 +9,7 @@ const DEFAULT_VIDEOS = [
     title: 'Heavy Machinery Shrink Cover Application',
     category: 'Shrink Wrapping',
     description: 'Watch our technical packaging team apply protective shrink cover to industrial machinery.',
-    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-factory-worker-welding-metal-parts-42998-large.mp4',
+    videoUrl: '/uploads/1780642013161-717563536.mov',
     thumbnailUrl: '/uploads/Shrink-Wrapping.jpeg',
     aspectRatio: '16:10'
   },
@@ -18,7 +18,7 @@ const DEFAULT_VIDEOS = [
     title: 'ISPM 15 Certified Export Wooden Box Fabrication',
     category: 'Wooden Packaging',
     description: 'On-site wooden crate assembly and load securing for heavy export shipments.',
-    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-industrial-crane-lifting-a-heavy-load-in-a-factory-42995-large.mp4',
+    videoUrl: '/uploads/1780642013161-717563536.mov',
     thumbnailUrl: '/uploads/seaworthy_packing.jpg',
     aspectRatio: '16:10'
   },
@@ -27,7 +27,7 @@ const DEFAULT_VIDEOS = [
     title: 'VCI Film Vacuum Packing for Precision Metal Parts',
     category: 'VCI Packaging',
     description: 'Sealing automotive components inside anti-rust VCI film bags and vacuum extraction.',
-    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-mechanic-fixing-an-engine-42994-large.mp4',
+    videoUrl: '/uploads/1780642013161-717563536.mov',
     thumbnailUrl: '/uploads/vaccum-packing.jpg',
     aspectRatio: '16:10'
   },
@@ -36,7 +36,7 @@ const DEFAULT_VIDEOS = [
     title: 'Silpaulin Heavy Duty Protective Cover Installation',
     category: 'Protective Packaging',
     description: 'Custom tailored Silpaulin tarpaulin covers securing outdoor machinery against rain and sunlight.',
-    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-worker-using-a-drill-on-a-wooden-board-43000-large.mp4',
+    videoUrl: '/uploads/1780642013161-717563536.mov',
     thumbnailUrl: '/uploads/tarpaulin.jpg',
     aspectRatio: '16:10'
   },
@@ -45,7 +45,7 @@ const DEFAULT_VIDEOS = [
     title: 'Aluminium Barrier Foil Heat Sealing Process',
     category: 'Industrial Packaging',
     description: 'Hermetic heat sealing of aluminium barrier foil for sub-zero moisture vapor transfer rate protection.',
-    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-close-up-of-a-sparking-welding-torch-42997-large.mp4',
+    videoUrl: '/uploads/1780642013161-717563536.mov',
     thumbnailUrl: '/uploads/aluminium_foil_preservation.jpg',
     aspectRatio: '16:10'
   },
@@ -54,7 +54,7 @@ const DEFAULT_VIDEOS = [
     title: 'Contract Packaging Operations in Action',
     category: 'Contract Packaging',
     description: 'End-to-end B2B contract packing, palletizing, and cargo lashing for heavy industrial logistics.',
-    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-automated-robotic-arm-moving-in-a-factory-42999-large.mp4',
+    videoUrl: '/uploads/1780642013161-717563536.mov',
     thumbnailUrl: '/uploads/odc_cargo_packing.jpg',
     aspectRatio: '16:10'
   }
@@ -328,13 +328,18 @@ export default function VideoGallerySection() {
                 ></iframe>
               ) : (
                 <video 
-                  src={getMediaUrl(lightbox.videoUrl)} 
-                  poster={getMediaUrl(lightbox.thumbnailUrl)} 
                   controls 
                   autoPlay 
                   playsInline
+                  preload="metadata"
+                  poster={getMediaUrl(lightbox.thumbnailUrl)} 
                   className="modal-vertical-video"
-                ></video>
+                >
+                  <source src={getMediaUrl(lightbox.videoUrl)} type="video/mp4" />
+                  <source src={getMediaUrl(lightbox.videoUrl)} type="video/quicktime" />
+                  <source src={getMediaUrl(lightbox.videoUrl)} />
+                  Your browser does not support playing this video.
+                </video>
               )}
             </div>
             <div className="video-modal-meta">
