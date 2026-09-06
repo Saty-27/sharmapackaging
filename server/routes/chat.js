@@ -188,10 +188,19 @@ router.post('/messages', protectCustomer, async (req, res) => {
           idempotencyId: idempotencyId || ''
         });
 
-        await Conversation.findByIdAndUpdate(conversation._id, {
+        const updatedConv = await Conversation.findByIdAndUpdate(conversation._id, {
           lastMessageAt: new Date(),
           $inc: { unreadCountAdmin: 1 }
-        });
+        }, { new: true });
+
+        const io = req.app.get('io');
+        if (io) {
+          io.to(`conversation:${conversation._id}`).emit('message:new', msgRecord);
+          io.to('admin:room').emit('conversation:updated', {
+            conversation: updatedConv,
+            lastMessage: msgRecord
+          });
+        }
 
         return res.status(201).json(msgRecord);
       } catch (dbErr) {

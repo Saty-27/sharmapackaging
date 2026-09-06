@@ -41,6 +41,11 @@ export default function AdminChatbot() {
   const socketRef = useRef(null);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  const selectedConvIdRef = useRef(selectedConvId);
+
+  useEffect(() => {
+    selectedConvIdRef.current = selectedConvId;
+  }, [selectedConvId]);
 
   const effectiveToken = token || localStorage.getItem('sharmapackaging_token');
 
@@ -65,13 +70,14 @@ export default function AdminChatbot() {
         return timeB - timeA;
       });
       setConversations(sortedList);
-      if (!selectedConvId && sortedList.length > 0) {
-        setSelectedConvId(sortedList[0]._id || sortedList[0].id);
+      if (!selectedConvIdRef.current && sortedList.length > 0) {
+        const initialId = sortedList[0]._id || sortedList[0].id;
+        setSelectedConvId(initialId);
       }
     } catch (err) {
       console.warn('Error fetching admin conversations:', err);
     }
-  }, [searchTerm, statusFilter, selectedConvId]);
+  }, [searchTerm, statusFilter]);
 
   // Fetch active conversation detail & messages
   const fetchActiveConversationDetail = useCallback(async (convId) => {
@@ -89,11 +95,14 @@ export default function AdminChatbot() {
     fetchConversations();
     const interval = setInterval(fetchConversations, 5000);
     return () => clearInterval(interval);
-  }, [searchTerm, statusFilter]);
+  }, [fetchConversations]);
 
   useEffect(() => {
     if (selectedConvId) {
       fetchActiveConversationDetail(selectedConvId);
+      if (socketRef.current && socketRef.current.connected) {
+        socketRef.current.emit('conversation:join', { conversationId: selectedConvId });
+      }
     }
   }, [selectedConvId, fetchActiveConversationDetail]);
 
@@ -111,15 +120,20 @@ export default function AdminChatbot() {
     socketRef.current = socket;
 
     socket.on('connect', () => {
-      if (selectedConvId) {
-        socket.emit('conversation:join', { conversationId: selectedConvId });
+      const activeId = selectedConvIdRef.current;
+      if (activeId) {
+        socket.emit('conversation:join', { conversationId: activeId });
       }
     });
 
     socket.on('message:new', (msg) => {
-      if (msg.conversationId === selectedConvId) {
+      const activeId = selectedConvIdRef.current;
+      const msgConvId = msg.conversationId || (msg.conversation?._id || msg.conversation);
+      if (msgConvId === activeId) {
         setMessages((prev) => {
-          if (prev.some((m) => m._id === msg._id)) return prev;
+          if (prev.some((m) => m._id === msg._id || (msg.idempotencyId && m.idempotencyId === msg.idempotencyId))) {
+            return prev;
+          }
           return [...prev, msg];
         });
       }
@@ -128,17 +142,31 @@ export default function AdminChatbot() {
 
     socket.on('conversation:updated', ({ conversation, lastMessage }) => {
       fetchConversations();
+      const activeId = selectedConvIdRef.current;
+      if (lastMessage) {
+        const lastMsgConvId = lastMessage.conversationId || (lastMessage.conversation?._id || lastMessage.conversation);
+        if (lastMsgConvId === activeId) {
+          setMessages((prev) => {
+            if (prev.some((m) => m._id === lastMessage._id || (lastMessage.idempotencyId && m.idempotencyId === lastMessage.idempotencyId))) {
+              return prev;
+            }
+            return [...prev, lastMessage];
+          });
+        }
+      }
     });
 
     socket.on('typing:start', ({ senderType, name, conversationId }) => {
-      if (senderType === 'customer' && conversationId === selectedConvId) {
+      const activeId = selectedConvIdRef.current;
+      if (senderType === 'customer' && conversationId === activeId) {
         setCustomerIsTyping(true);
         setTypingCustomerName(name || 'Customer');
       }
     });
 
     socket.on('typing:stop', ({ conversationId }) => {
-      if (conversationId === selectedConvId) {
+      const activeId = selectedConvIdRef.current;
+      if (conversationId === activeId) {
         setCustomerIsTyping(false);
       }
     });
@@ -146,10 +174,11 @@ export default function AdminChatbot() {
     return () => {
       socket.disconnect();
     };
-  }, [effectiveToken, selectedConvId, fetchConversations]);
+  }, [effectiveToken, fetchConversations]);
 
   // Switch Active Conversation Room
   const handleSelectConversation = (convId) => {
+    if (selectedConvId === convId) return;
     if (socketRef.current && selectedConvId) {
       socketRef.current.emit('conversation:leave', { conversationId: selectedConvId });
     }
