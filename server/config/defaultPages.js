@@ -2,7 +2,7 @@ module.exports = [
   {
     pageName: 'Home',
     slug: '/',
-    metaTitle: 'Sharma Packaging - VCI & Seaworthy Packaging Manufacturer Vadodara',
+    metaTitle: 'Sharma Packaging | Foundation for your shipment',
     metaDescription: 'Sharma Packaging is a leading manufacturer of VCI products and seaworthy packaging solutions in Vadodara, Gujarat. Export packaging, corrosion protection, industrial packaging.',
   },
   {

@@ -419,7 +419,7 @@ export default function Home() {
 
   return (
     <div className="home-page-redesign">
-      <SEOHead title="Sharma Packagings - Strong Packaging. Stronger Protection." />
+      <SEOHead title="Sharma Packaging | Foundation for your shipment" />
 
       {/* SECTION 1: HERO BANNER */}
       <section className="official-hero-banner-section">

@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 
 export default function SEOHead({ title, description, keywords, canonical, ogImage, schema }) {
   const siteName = 'Sharma Packaging';
-  const defaultTitle = 'Sharma Packaging | VCI & Seaworthy Packaging Manufacturer in Vadodara';
+  const defaultTitle = 'Sharma Packaging | Foundation for your shipment';
   const fullTitle = title ? (title.includes(siteName) ? title : `${title} | ${siteName}`) : defaultTitle;
   const defaultDescription = 'Sharma Packaging provides industrial packaging materials and custom-made packaging solutions for corrosion protection, moisture control, seaworthy packing, VCI packaging, shrink wrapping, and export packaging in Vadodara, Gujarat.';
   const metaDescription = description || defaultDescription;
