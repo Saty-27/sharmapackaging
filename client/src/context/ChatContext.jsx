@@ -143,8 +143,11 @@ export const ChatProvider = ({ children }) => {
 
     socket.on('message:new', (msg) => {
       setMessages((prev) => {
-        if (prev.some((m) => m._id === msg._id || (msg.idempotencyId && m.idempotencyId === msg.idempotencyId))) {
-          return prev;
+        const index = prev.findIndex((m) => m._id === msg._id || (msg.idempotencyId && m.idempotencyId === msg.idempotencyId));
+        if (index !== -1) {
+          const updated = [...prev];
+          updated[index] = msg;
+          return updated;
         }
         return [...prev, msg];
       });
@@ -171,6 +174,23 @@ export const ChatProvider = ({ children }) => {
       socket.disconnect();
     };
   }, [customerToken, loadConversation]);
+
+  // Join active conversation socket room when conversation changes
+  useEffect(() => {
+    const convId = conversation?._id || conversation?.id;
+    if (socketRef.current && convId) {
+      socketRef.current.emit('conversation:join', { conversationId: convId });
+    }
+  }, [conversation]);
+
+  // Auto-poll active conversation messages when widget is open
+  useEffect(() => {
+    if (!isOpen || !customerToken) return;
+    const pollInterval = setInterval(() => {
+      loadConversation();
+    }, 3500);
+    return () => clearInterval(pollInterval);
+  }, [isOpen, customerToken, loadConversation]);
 
   // Trigger chatbot button click
   const handleToggleWidget = () => {

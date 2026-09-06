@@ -37,7 +37,8 @@ const app = express();
 const server = http.createServer(app);
 
 // Initialize Socket.IO
-initSocket(server);
+const io = initSocket(server);
+app.set('io', io);
 
 // Connect to database
 connectDB();

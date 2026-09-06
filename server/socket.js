@@ -37,6 +37,11 @@ function initSocket(server) {
     const isCustomer = user.role === 'customer';
     const isAdmin = user.role === 'admin' || user.role === 'superadmin';
 
+    // Join user specific room so any targeted message is received
+    if (userId) {
+      socket.join(`user:${userId}`);
+    }
+
     // If admin connects, join admin global room
     if (isAdmin) {
       socket.join('admin:room');
@@ -107,8 +112,12 @@ function initSocket(server) {
               { new: true }
             ).populate('customerId', 'name email phone companyName inquiryType country isOnline');
 
-            // Emit to conversation room
+            // Emit to conversation room and customer user room
             io.to(`conversation:${conversationId}`).emit('message:new', msgRecord);
+            if (updatedConv?.customerId) {
+              const custId = updatedConv.customerId._id || updatedConv.customerId;
+              io.to(`user:${custId}`).emit('message:new', msgRecord);
+            }
 
             // Notify admin dashboard
             io.to('admin:room').emit('conversation:updated', {
