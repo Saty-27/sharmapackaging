@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const trimTrailingSlash = (value) => value.replace(/\/+$/, '');
 const configuredApiBase = import.meta.env.VITE_API_URL?.trim();
-const defaultApiBase = import.meta.env.DEV ? 'http://localhost:5001' : '';
+const defaultApiBase = import.meta.env.DEV ? 'http://localhost:5002' : '';
 const API_BASE = trimTrailingSlash(configuredApiBase || defaultApiBase);
 
 const api = axios.create({

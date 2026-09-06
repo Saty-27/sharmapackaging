@@ -6,7 +6,7 @@ const ChatContext = createContext(null);
 
 const trimTrailingSlash = (value) => (value || '').replace(/\/+$/, '');
 const configuredApiBase = import.meta.env.VITE_API_URL?.trim();
-const defaultApiBase = import.meta.env.DEV ? 'http://localhost:5001' : '';
+const defaultApiBase = import.meta.env.DEV ? 'http://localhost:5002' : '';
 const BASE_HOST = trimTrailingSlash(configuredApiBase || defaultApiBase);
 
 const API_BASE = `${BASE_HOST}/api`;
