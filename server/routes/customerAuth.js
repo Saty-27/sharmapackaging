@@ -76,7 +76,7 @@ router.post('/register', async (req, res) => {
       name: name.trim(),
       email: cleanEmail,
       phone: phone.trim(),
-      companyName: companyName.trim(),
+      companyName: cleanCompany,
       address: (address || '').trim(),
       country: (country || 'India').trim(),
       inquiryType: (inquiryType || 'General Enquiry').trim(),

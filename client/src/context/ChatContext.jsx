@@ -4,8 +4,13 @@ import { io } from 'socket.io-client';
 
 const ChatContext = createContext(null);
 
-const API_BASE = 'http://localhost:5001/api';
-const SOCKET_URL = 'http://localhost:5001';
+const trimTrailingSlash = (value) => (value || '').replace(/\/+$/, '');
+const configuredApiBase = import.meta.env.VITE_API_URL?.trim();
+const defaultApiBase = import.meta.env.DEV ? 'http://localhost:5001' : '';
+const BASE_HOST = trimTrailingSlash(configuredApiBase || defaultApiBase);
+
+const API_BASE = `${BASE_HOST}/api`;
+const SOCKET_URL = BASE_HOST || (typeof window !== 'undefined' ? window.location.origin : '');
 
 export const ChatProvider = ({ children }) => {
   const [customerToken, setCustomerToken] = useState(() => localStorage.getItem('sp_customer_token') || null);
