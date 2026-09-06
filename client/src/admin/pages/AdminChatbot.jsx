@@ -121,7 +121,7 @@ export default function AdminChatbot() {
 
   useEffect(() => {
     fetchConversations();
-    const interval = setInterval(fetchConversations, 5000);
+    const interval = setInterval(fetchConversations, 3000);
     return () => clearInterval(interval);
   }, [fetchConversations]);
 
@@ -132,6 +132,13 @@ export default function AdminChatbot() {
       if (socketRef.current && socketRef.current.connected) {
         socketRef.current.emit('conversation:join', { conversationId: cleanId });
       }
+
+      // Auto-sync active conversation messages every 3s to guarantee VPS consistency
+      const activeSyncTimer = setInterval(() => {
+        fetchActiveConversationDetail(cleanId);
+      }, 3000);
+
+      return () => clearInterval(activeSyncTimer);
     }
   }, [selectedConvId, fetchActiveConversationDetail]);
 
@@ -142,7 +149,8 @@ export default function AdminChatbot() {
 
     const socket = io(SOCKET_URL, {
       auth: { token: currentToken },
-      reconnectionAttempts: 5,
+      transports: ['websocket', 'polling'],
+      reconnectionAttempts: 10,
       reconnectionDelay: 1000
     });
 
