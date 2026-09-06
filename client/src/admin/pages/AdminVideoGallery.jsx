@@ -165,8 +165,9 @@ export default function AdminVideoGallery() {
       }
       resetForm();
       loadVideos();
-    } catch {
-      toast.error('Failed to save video');
+    } catch (err) {
+      console.error('Failed to save video:', err);
+      toast.error(err.response?.data?.message || 'Failed to save video');
     }
   };
 
@@ -477,13 +478,18 @@ export default function AdminVideoGallery() {
                 ></iframe>
               ) : (
                 <video 
-                  src={getMediaUrl(showPreview.videoUrl)} 
-                  poster={getMediaUrl(showPreview.thumbnailUrl)} 
                   controls 
                   autoPlay 
                   playsInline
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                ></video>
+                  preload="metadata"
+                  poster={getMediaUrl(showPreview.thumbnailUrl)} 
+                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                >
+                  <source src={getMediaUrl(showPreview.videoUrl)} type="video/mp4" />
+                  <source src={getMediaUrl(showPreview.videoUrl)} type="video/quicktime" />
+                  <source src={getMediaUrl(showPreview.videoUrl)} />
+                  Your browser does not support video playback.
+                </video>
               )}
             </div>
             <div style={{ padding: 16, background: 'var(--navy-dark)', color: '#FFF' }}>

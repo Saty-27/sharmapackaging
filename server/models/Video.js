@@ -7,21 +7,9 @@ const videoSchema = new mongoose.Schema({
   description: { type: String, default: '' },
   videoUrl: { type: String, required: true },
   thumbnailUrl: { type: String, default: '' },
-  category: { 
-    type: String, 
-    enum: [
-      'Industrial Packaging', 
-      'Wooden Packaging', 
-      'Shrink Wrapping', 
-      'VCI Packaging', 
-      'Protective Packaging', 
-      'Contract Packaging', 
-      'General'
-    ],
-    default: 'Industrial Packaging' 
-  },
-  videoType: { type: String, enum: ['local', 'youtube', 'url'], default: 'local' },
-  aspectRatio: { type: String, enum: ['9:16', '9:12', '16:9'], default: '9:16' },
+  category: { type: String, default: 'Industrial Packaging' },
+  videoType: { type: String, default: 'local' },
+  aspectRatio: { type: String, default: '9:16' },
   displayOrder: { type: Number, default: 0 },
   isPublished: { type: Boolean, default: true },
   isFeatured: { type: Boolean, default: false },

@@ -159,22 +159,29 @@ router.get('/admin/all', protect, async (req, res) => {
 // POST /api/videos/admin (admin create)
 router.post('/admin', protect, async (req, res) => {
   try {
+    const payload = { ...req.body };
+    delete payload._id;
+    delete payload.createdAt;
+    delete payload.updatedAt;
+    delete payload.__v;
+
     if (mongoose.connection.readyState === 1) {
-      const video = await Video.create(req.body);
+      const video = await Video.create(payload);
       return res.status(201).json(video);
     } else {
       const newVid = {
         _id: 'vid-' + Date.now(),
-        ...req.body,
+        ...payload,
         createdAt: new Date(),
-        isPublished: req.body.isPublished !== undefined ? req.body.isPublished : true,
-        displayOrder: req.body.displayOrder || inMemoryVideos.length + 1
+        isPublished: payload.isPublished !== undefined ? payload.isPublished : true,
+        displayOrder: payload.displayOrder || inMemoryVideos.length + 1
       };
       inMemoryVideos.unshift(newVid);
       return res.status(201).json(newVid);
     }
   } catch (error) {
-    res.status(500).json({ message: 'Error creating video', error: error.message });
+    console.error('Error creating video:', error);
+    res.status(500).json({ message: error.message || 'Error creating video' });
   }
 });
 
@@ -184,9 +191,12 @@ router.put('/admin/reorder', protect, async (req, res) => {
     const { items } = req.body;
     if (Array.isArray(items)) {
       if (mongoose.connection.readyState === 1) {
-        const promises = items.map(item => 
-          Video.findByIdAndUpdate(item.id, { displayOrder: item.displayOrder })
-        );
+        const promises = items.map(item => {
+          if (mongoose.Types.ObjectId.isValid(item.id)) {
+            return Video.findByIdAndUpdate(item.id, { displayOrder: item.displayOrder });
+          }
+          return Promise.resolve();
+        });
         await Promise.all(promises);
       } else {
         items.forEach(item => {
@@ -205,20 +215,31 @@ router.put('/admin/reorder', protect, async (req, res) => {
 // PUT /api/videos/admin/:id (admin update)
 router.put('/admin/:id', protect, async (req, res) => {
   try {
+    const payload = { ...req.body };
+    delete payload._id;
+    delete payload.createdAt;
+    delete payload.updatedAt;
+    delete payload.__v;
+
     if (mongoose.connection.readyState === 1) {
-      const video = await Video.findByIdAndUpdate(req.params.id, req.body, { new: true });
-      if (!video) return res.status(404).json({ message: 'Video not found' });
-      return res.json(video);
+      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        const video = await Video.findByIdAndUpdate(req.params.id, payload, { new: true, runValidators: true });
+        if (video) return res.json(video);
+      }
+      // If editing a non-ObjectId default video or missing doc, create a new record
+      const newVideo = await Video.create(payload);
+      return res.json(newVideo);
     } else {
       const idx = inMemoryVideos.findIndex(v => v._id === req.params.id);
       if (idx !== -1) {
-        inMemoryVideos[idx] = { ...inMemoryVideos[idx], ...req.body };
+        inMemoryVideos[idx] = { ...inMemoryVideos[idx], ...payload };
         return res.json(inMemoryVideos[idx]);
       }
       return res.status(404).json({ message: 'Video not found' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Error updating video', error: error.message });
+    console.error('Error updating video:', error);
+    res.status(500).json({ message: error.message || 'Error updating video' });
   }
 });
 
@@ -226,7 +247,9 @@ router.put('/admin/:id', protect, async (req, res) => {
 router.delete('/admin/:id', protect, async (req, res) => {
   try {
     if (mongoose.connection.readyState === 1) {
-      await Video.findByIdAndDelete(req.params.id);
+      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        await Video.findByIdAndDelete(req.params.id);
+      }
     } else {
       inMemoryVideos = inMemoryVideos.filter(v => v._id !== req.params.id);
     }
