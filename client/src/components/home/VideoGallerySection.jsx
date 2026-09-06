@@ -235,12 +235,22 @@ export default function VideoGallerySection() {
                   >
                     {/* AREA 1: COMPACT THUMBNAIL BOX */}
                     <div className="vg-thumb-box">
-                      <img 
-                        src={thumbnailSrc} 
-                        onError={(e) => { e.target.onerror = null; e.target.src = '/uploads/seaworthy_packing.jpg'; }}
-                        alt={video.title} 
-                        className="vg-thumb-img"
-                      />
+                      {(video.thumbnailUrl || video.posterUrl) ? (
+                        <img 
+                          src={getMediaUrl(video.thumbnailUrl || video.posterUrl)} 
+                          alt={video.title} 
+                          className="vg-thumb-img"
+                        />
+                      ) : (
+                        <video 
+                          src={`${getMediaUrl(video.videoUrl)}#t=0.5`} 
+                          preload="metadata" 
+                          muted 
+                          playsInline 
+                          className="vg-thumb-img"
+                          style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                        />
+                      )}
                       <div className="vg-overlay"></div>
                       
                       {/* CENTERED ROYAL BLUE PLAY BUTTON */}

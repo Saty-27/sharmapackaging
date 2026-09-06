@@ -529,11 +529,21 @@ export default function AdminVideoGallery() {
                   <td style={{ padding: '14px 18px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                       <div style={{ width: 44, height: 72, borderRadius: 8, background: '#000', overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
-                        <img 
-                          src={getMediaUrl(vid.thumbnailUrl) || '/uploads/hero_bg.png'} 
-                          alt={vid.title} 
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                        />
+                        {vid.thumbnailUrl ? (
+                          <img 
+                            src={getMediaUrl(vid.thumbnailUrl)} 
+                            alt={vid.title} 
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                          />
+                        ) : (
+                          <video 
+                            src={`${getMediaUrl(vid.videoUrl)}#t=0.5`} 
+                            preload="metadata" 
+                            muted 
+                            playsInline 
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                          />
+                        )}
                         <FaPlay style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: '#FFF', fontSize: '0.8rem', opacity: 0.9 }} />
                       </div>
                       <div>

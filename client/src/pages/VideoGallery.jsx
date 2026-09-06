@@ -160,12 +160,22 @@ export default function VideoGallery() {
                 onClick={() => setLightbox(video)}
               >
                 <div className="video-thumb-container">
-                  <img 
-                    src={getMediaUrl(video.thumbnailUrl) || '/uploads/hero_bg.png'} 
-                    onError={(e) => { e.target.onerror = null; e.target.src = '/uploads/hero_bg.png'; }}
-                    alt={video.title} 
-                    className="video-poster-img"
-                  />
+                  {video.thumbnailUrl ? (
+                    <img 
+                      src={getMediaUrl(video.thumbnailUrl)} 
+                      alt={video.title} 
+                      className="video-poster-img"
+                    />
+                  ) : (
+                    <video 
+                      src={`${getMediaUrl(video.videoUrl)}#t=0.5`} 
+                      preload="metadata" 
+                      muted 
+                      playsInline 
+                      className="video-poster-img"
+                      style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                    />
+                  )}
                   <div className="video-overlay-gradient"></div>
                   <div className="video-play-btn-circle">
                     <FaPlay className="play-icon" />
