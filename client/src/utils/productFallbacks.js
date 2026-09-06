@@ -1,5 +1,5 @@
 export const fallbackProducts = [
-  { _id: 'fallback-1', name: 'Wooden Pallets', slug: 'wooden-pallets', category: { name: 'Wooden Packaging' }, images: ['/uploads/Wooden-Pallets.png'], isPublished: true },
+  { _id: 'fallback-1', name: 'Wooden Pallets', slug: 'wooden-pallets', category: { name: 'Wooden Packaging' }, images: ['/uploads/prod_1.png'], isPublished: true },
   { _id: 'fallback-2', name: 'Wooden Skid', slug: 'wooden-skid', category: { name: 'Wooden Packaging' }, images: ['/uploads/seaworthy_packing.jpg'], isPublished: true },
   { _id: 'fallback-3', name: 'Shrink Wrapping', slug: 'shrink-wrapping', category: { name: 'Wrapping & Films' }, images: ['/uploads/Shrink-Wrapping.jpeg'], isPublished: true },
   { _id: 'fallback-4', name: 'Packing Materials', slug: 'packing-materials', category: { name: 'Packaging Materials' }, images: ['/uploads/industrial-customized-protective-packing-materials-859.jpg'], isPublished: true },

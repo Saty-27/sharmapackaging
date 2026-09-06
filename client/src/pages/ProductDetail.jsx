@@ -133,7 +133,12 @@ export default function ProductDetail({ seoSlug }) {
           {/* Gallery Col */}
           <div className="p-gallery-col">
             <div className="p-main-img-box">
-              <img src={activeImg || product.image} alt={product.name} className="p-main-img" />
+              <img 
+                src={activeImg || product.image} 
+                onError={(e) => { e.target.onerror = null; e.target.src = '/uploads/prod_1.png'; }}
+                alt={product.name} 
+                className="p-main-img" 
+              />
               <span className="p-cat-tag">{product.category}</span>
             </div>
             
@@ -145,7 +150,11 @@ export default function ProductDetail({ seoSlug }) {
                     onClick={() => setActiveImg(img)}
                     className={`thumb-btn ${activeImg === img ? 'is-active' : ''}`}
                   >
-                    <img src={img} alt={`${product.name} thumb ${idx}`} />
+                    <img 
+                      src={img} 
+                      onError={(e) => { e.target.onerror = null; e.target.src = '/uploads/prod_1.png'; }}
+                      alt={`${product.name} thumb ${idx}`} 
+                    />
                   </button>
                 ))}
               </div>

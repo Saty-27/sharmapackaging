@@ -426,9 +426,10 @@ export default function Home() {
         <div className="container official-hero-container">
           <div className="banner-image-wrapper" onClick={() => handleOpenQuote()}>
             <picture>
-              <source media="(max-width: 768px)" srcset="/uploads/hero_banner_mobile.jpg" />
+              <source media="(max-width: 768px)" srcSet="/uploads/hero_banner_mobile.jpg" />
               <img 
                 src="/uploads/hero_banner.jpg" 
+                onError={(e) => { e.target.onerror = null; e.target.src = '/hero_banner.jpg'; }}
                 alt="Sharma Packagings - Strong Packaging. Stronger Protection." 
                 className="official-hero-img"
               />
