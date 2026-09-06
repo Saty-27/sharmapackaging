@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { useChat } from '../../context/ChatContext';
 import { FaPaperclip, FaPaperPlane, FaTimes, FaFilePdf, FaFileAlt, FaFileImage, FaFileArchive, FaCheck, FaCheckDouble, FaSignOutAlt } from 'react-icons/fa';
 
+import { getMediaUrl } from '../../utils/api';
+
 export default function ChatWindow() {
   const {
     isOpen,
@@ -105,13 +107,13 @@ export default function ChatWindow() {
 
   const renderFileAttachment = (msg) => {
     const { messageType, attachmentUrl, attachmentName, attachmentSize } = msg;
-    const fullUrl = attachmentUrl.startsWith('http') ? attachmentUrl : `http://localhost:5001${attachmentUrl}`;
+    const fullUrl = getMediaUrl(attachmentUrl);
     const sizeMb = attachmentSize ? (attachmentSize / (1024 * 1024)).toFixed(2) + ' MB' : '';
 
     if (messageType === 'image') {
       return (
         <a href={fullUrl} target="_blank" rel="noreferrer" className="chat-img-preview-link">
-          <img src={fullUrl} alt={attachmentName} className="chat-msg-img" />
+          <img src={fullUrl} alt={attachmentName || 'Attachment'} className="chat-msg-img" />
         </a>
       );
     }

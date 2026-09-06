@@ -30,7 +30,7 @@ export default function ChatWidget() {
   return (
     <>
       {/* Floating Trigger Wrapper */}
-      <div className="chat-widget-trigger-wrapper">
+      <div className={`chat-widget-trigger-wrapper ${isOpen ? 'is-open' : ''}`}>
         
         {/* Indication Tooltip Speech Bubble */}
         {!isOpen && showPrompt && (

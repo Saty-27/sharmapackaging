@@ -8,6 +8,10 @@
   align-items: center;
 }
 
+.chat-widget-trigger-wrapper.is-open {
+  display: none;
+}
+
 /* INDICATION TOOLTIP SPEECH BUBBLE */
 .chat-indication-tooltip {
   position: absolute;
@@ -677,9 +681,12 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .chat-attach-btn {
+  flex-shrink: 0;
   background: none;
   border: none;
   color: #64748B;
@@ -695,6 +702,7 @@
 
 .chat-composer-input {
   flex: 1;
+  min-width: 0;
   border: 1px solid #CBD5E1;
   border-radius: 20px;
   padding: 8px 14px;
@@ -708,6 +716,7 @@
 }
 
 .chat-send-btn {
+  flex-shrink: 0;
   background-color: #1456D9;
   color: #FFFFFF;
   border: none;
