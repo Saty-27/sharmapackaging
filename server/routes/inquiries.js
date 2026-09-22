@@ -69,7 +69,7 @@ router.get('/admin', protect, async (req, res) => {
         if (status) query.status = status;
         if (product) query.productInterested = { $regex: product, $options: 'i' };
         const inquiries = await Inquiry.find(query).sort({ createdAt: -1 });
-        return res.json(inquiries.length > 0 ? inquiries : inMemoryInquiries);
+        return res.json(inquiries);
       } catch (err) {
         console.warn('DB inquiries admin failed, using in-memory:', err.message);
       }
@@ -125,11 +125,10 @@ router.delete('/admin/:id', protect, async (req, res) => {
 
 router.get('/admin/export', protect, async (req, res) => {
   try {
-    let inquiries = inMemoryInquiries;
+    let inquiries = [];
     if (mongoose.connection.readyState === 1) {
       try {
-        const dbInquiries = await Inquiry.find().sort({ createdAt: -1 });
-        if (dbInquiries.length > 0) inquiries = dbInquiries;
+        inquiries = await Inquiry.find().sort({ createdAt: -1 });
       } catch (err) {
         console.warn('DB export inquiries failed:', err.message);
       }
