@@ -346,7 +346,9 @@ router.get('/', async (req, res) => {
     if (mongoose.connection.readyState === 1) {
       try {
         const query = { isPublished: true };
-        if (category) query.category = category;
+        if (category && mongoose.Types.ObjectId.isValid(category)) {
+          query.category = category;
+        }
         const normalizedSearch = search?.trim();
         if (normalizedSearch) {
           const safeSearch = escapeRegex(normalizedSearch);
